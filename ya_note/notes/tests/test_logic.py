@@ -1,5 +1,3 @@
-from http import HTTPStatus
-
 from django.contrib.auth import get_user_model
 from django.test import Client, TestCase
 from django.urls import reverse
@@ -92,4 +90,3 @@ class TestLogic(TestCase):
         self.auth_two.delete(url)
         note_count = Note.objects.count()
         self.assertEqual(note_count, 1)
-
