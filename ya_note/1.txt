@@ -1,0 +1,38 @@
+============================= test session starts =============================
+platform win32 -- Python 3.9.13, pytest-7.1.3, pluggy-1.5.0 -- C:\dev\django_testing\venv\Scripts\python.exe
+django: settings: yanote.settings (from ini)
+rootdir: C:\dev\django_testing\ya_note, configfile: pytest.ini, testpaths: notes/tests/
+plugins: django-4.5.2, lazy-fixture-0.6.3, subtests-0.9.0
+collecting ... collected 10 items
+
+notes/tests/test_content.py::TestContent::test_existing_form PASSED      [ 10%]
+notes/tests/test_content.py::TestContent::test_note_in_list PASSED       [ 20%]
+notes/tests/test_content.py::TestContent::test_note_in_list_author_another PASSED [ 30%]
+notes/tests/test_logic.py::TestLogic::test_anonymous_user_cant_create_note PASSED [ 40%]
+notes/tests/test_logic.py::TestLogic::test_slug_unique FAILED            [ 50%]
+notes/tests/test_logic.py::TestLogic::test_user_can_create_note PASSED   [ 60%]
+notes/tests/test_routes.py::TestRoutes::test_availability_for_note_edit_and_delete PASSED [ 70%]
+notes/tests/test_routes.py::TestRoutes::test_pages_availability_anonymous PASSED [ 80%]
+notes/tests/test_routes.py::TestRoutes::test_pages_availability_authorized PASSED [ 90%]
+notes/tests/test_routes.py::TestRoutes::test_redirect_for_anonymous_client PASSED [100%]
+
+================================== FAILURES ===================================
+_________________________ TestLogic.test_slug_unique __________________________
+
+self = <notes.tests.test_logic.TestLogic testMethod=test_slug_unique>
+
+    def test_slug_unique(self):
+        url = reverse('notes:add')
+        note_count = Note.objects.count()
+        self.auth_one.post(url, data=self.form_data)
+        response = self.auth_one.post(url, data=self.form_data)
+        self.assertFormError(response,
+                             form='form',
+                             field='slug',
+>                            errors=self.note.slug + WARNING)
+E       AttributeError: 'TestLogic' object has no attribute 'note'
+
+notes\tests\test_logic.py:64: AttributeError
+=========================== short test summary info ===========================
+FAILED notes/tests/test_logic.py::TestLogic::test_slug_unique - AttributeErro...
+========================= 1 failed, 9 passed in 0.62s =========================
