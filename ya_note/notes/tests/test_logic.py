@@ -2,8 +2,8 @@ from http import HTTPStatus
 
 from pytils.translit import slugify
 
-from notes.models import Note
 from notes.forms import WARNING
+from notes.models import Note
 from .lib import (
     TestBasicClass,
     NOTES_ADD,
@@ -36,12 +36,10 @@ class TestLogic(TestBasicClass):
         note_item = Note.objects.get()
         self.assertEqual(note_item.title, FORM_DATA['title'])
         self.assertEqual(note_item.text, FORM_DATA['text'])
-        self.assertEqual(note_item.slug, SLUG)
+        self.assertEqual(note_item.slug, FORM_DATA['slug'])
         self.assertEqual(note_item.author, self.author)
 
     def test_slug_unique(self):
-        Note.objects.all().delete()
-        self.auth_author.post(NOTES_ADD, data=FORM_DATA)
         note_count = Note.objects.count()
         response = self.auth_author.post(NOTES_ADD, data=FORM_DATA)
         note_item = Note.objects.get()
@@ -52,11 +50,8 @@ class TestLogic(TestBasicClass):
                              errors=note_item.slug + WARNING)
 
     def test_author_can_delete_note(self):
-        Note.objects.all().delete()
-        note_count = Note.objects.count()
-        self.auth_author.post(NOTES_ADD, data=FORM_DATA)
         self.auth_author.delete(NOTES_DELETE)
-        self.assertEqual(note_count, Note.objects.count())
+        self.assertEqual(self.note_count, Note.objects.count() + 1)
 
     def test_other_user_cant_delete_note(self):
         self.auth_reader.delete(NOTES_DELETE)
@@ -64,12 +59,12 @@ class TestLogic(TestBasicClass):
         self.assertEqual(note_count, self.note_count)
 
     def test_empty_slug(self):
-        Note.objects.all().delete()
-        FORM_DATA.pop('slug')
-        self.auth_author.post(NOTES_ADD, data=FORM_DATA)
+        self.auth_author.post(NOTES_ADD, data={
+            'title': 'zagolovok',
+            'text': 'text'
+            })
         test_slug = slugify(FORM_DATA['title'])
-        note_item = Note.objects.get()
-        self.assertEqual(test_slug, note_item.slug)
+        self.assertEqual(test_slug, self.note.slug)
 
     def test_author_can_edit_note(self):
         response = self.auth_author.post(NOTES_EDIT, data=FORM_DATA)

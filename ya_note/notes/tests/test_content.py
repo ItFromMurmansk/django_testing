@@ -1,5 +1,4 @@
 from notes.forms import NoteForm
-
 from .lib import (
     TestBasicClass,
     NOTES_LIST,

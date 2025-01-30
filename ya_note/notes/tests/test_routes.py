@@ -42,7 +42,6 @@ class TestRoutes(TestBasicClass):
                 self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_availability_for_note_edit_and_delete(self):
-        self.client.logout()
         users_statuses = (
             (self.auth_reader, HTTPStatus.NOT_FOUND),
             (self.auth_author, HTTPStatus.OK),
