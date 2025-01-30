@@ -61,8 +61,7 @@ class TestLogic(TestBasicClass):
     def test_empty_slug(self):
         self.auth_author.post(NOTES_ADD, data={
             'title': 'zagolovok',
-            'text': 'text'
-            })
+            'text': 'text'})
         test_slug = slugify(FORM_DATA['title'])
         self.assertEqual(test_slug, self.note.slug)
 

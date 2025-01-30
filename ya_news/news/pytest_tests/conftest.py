@@ -1,6 +1,5 @@
 import pytest
 from django.test.client import Client
-
 from django.urls import reverse
 
 from news.models import News, Comment
@@ -55,11 +54,6 @@ def signup():
 
 
 @pytest.fixture
-def news_home():
-    return reverse(NEWS_HOME)
-
-
-@pytest.fixture
 def news():
     news = News.objects.create(
         title='Заголовок новости',
@@ -81,6 +75,11 @@ def comment(author, news):
 @pytest.fixture
 def news_detail(news):
     return reverse(NEWS_DETAIL, args=[news.pk])
+
+
+@pytest.fixture
+def news_home():
+    return reverse(NEWS_HOME)
 
 
 @pytest.fixture
