@@ -43,7 +43,7 @@ class TestLogic(TestBasicClass):
         note_count = Note.objects.count()
         response = self.auth_author.post(NOTES_ADD, data=FORM_DATA)
         note_item = Note.objects.get()
-        self.assertEqual(Note.objects.count(), note_count)
+        self.assertEqual(note_count, Note.objects.count())
         self.assertFormError(response,
                              form='form',
                              field='slug',
@@ -59,11 +59,12 @@ class TestLogic(TestBasicClass):
         self.assertEqual(note_count, self.note_count)
 
     def test_empty_slug(self):
+        Note.objects.all().delete()
         self.auth_author.post(NOTES_ADD, data={
             'title': 'zagolovok',
             'text': 'text'})
-        test_slug = slugify(FORM_DATA['title'])
-        self.assertEqual(test_slug, self.note.slug)
+        note_item = Note.objects.get()
+        self.assertEqual(note_item.slug, slugify(FORM_DATA['title']))
 
     def test_author_can_edit_note(self):
         response = self.auth_author.post(NOTES_EDIT, data=FORM_DATA)

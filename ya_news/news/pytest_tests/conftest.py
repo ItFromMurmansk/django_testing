@@ -1,5 +1,9 @@
+from datetime import datetime, timedelta
+
 import pytest
 from django.test.client import Client
+from django.conf import settings
+from django.utils import timezone
 from django.urls import reverse
 
 from news.models import News, Comment
@@ -102,3 +106,34 @@ def redirect_url_edit_comment(comment, login):
 def redirect_url_delete_comment(comment, login):
     url = reverse(NEWS_DELETE, args=[comment.pk])
     return f'{login}?next={url}'
+
+
+@pytest.fixture
+def create_bulk_of_news():
+    News.objects.bulk_create(
+        News(title=f'News number {index}',
+             text='News text',
+             date=datetime.today() - timedelta(days=index)
+             )
+        for index in range(settings.NEWS_COUNT_ON_HOME_PAGE + 1)
+    )
+
+
+@pytest.fixture
+def create_bulk_of_comments(news, author):
+    now = timezone.now()
+    for index in range(3):
+        comment = Comment.objects.create(
+            news=news,
+            author=author,
+            text=f'Comment text number {index}'
+        )
+        comment.created = now + timedelta(days=index)
+        comment.save()
+
+
+@pytest.fixture
+def form_data():
+    return {
+        'text': NEWS_TEXT
+    }
