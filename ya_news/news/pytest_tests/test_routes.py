@@ -4,21 +4,22 @@ import pytest
 from django.test.client import Client
 from pytest_django.asserts import assertRedirects
 
+from pytest_lazyfixture import lazy_fixture as lf
+
 pytestmark = pytest.mark.django_db
 
 CLIENT = Client()
-NEWS_DETAIL = pytest.lazy_fixture('news_detail')
-NEWS_HOME = pytest.lazy_fixture('news_home')
-NEWS_LOGIN = pytest.lazy_fixture('login')
-NEWS_LOGOUT = pytest.lazy_fixture('logout')
-NEWS_SIGNUP = pytest.lazy_fixture('signup')
-AUTH_READER = pytest.lazy_fixture('auth_reader')
-AUTH_AUTHOR = pytest.lazy_fixture('auth_author')
-COMMENT_EDIT = pytest.lazy_fixture('comment_edit')
-COMMENT_DELETE = pytest.lazy_fixture('comment_delete')
-REDIRECT_URL_EDIT_COMMENT = pytest.lazy_fixture('redirect_url_edit_comment')
-REDIRECT_URL_DELETE_COMMENT = (pytest
-                               .lazy_fixture('redirect_url_delete_comment'))
+NEWS_DETAIL = lf('news_detail')
+NEWS_HOME = lf('news_home')
+NEWS_LOGIN = lf('login')
+NEWS_LOGOUT = lf('logout')
+NEWS_SIGNUP = lf('signup')
+AUTH_READER = lf('auth_reader')
+AUTH_AUTHOR = lf('auth_author')
+COMMENT_EDIT = lf('comment_edit')
+COMMENT_DELETE = lf('comment_delete')
+REDIRECT_URL_EDIT_COMMENT = lf('redirect_url_edit_comment')
+REDIRECT_URL_DELETE_COMMENT = lf('redirect_url_delete_comment')
 
 
 @pytest.mark.parametrize(
