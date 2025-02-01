@@ -6,22 +6,21 @@ from news.forms import CommentForm
 pytestmark = pytest.mark.django_db
 
 
-def test_news_count(client, news_home):
+def test_news_count(client, news_home, create_bulk_of_news):
     response = client.get(news_home)
-    object_list = response.context['object_list']
-    news_count = len(object_list)
-    assert news_count <= settings.NEWS_COUNT_ON_HOME_PAGE
+    news_list = response.context['object_list']
+    assert news_list.count() <= settings.NEWS_COUNT_ON_HOME_PAGE
 
 
-def test_news_date_order(client, news_home):
+def test_news_date_order(client, news_home, create_bulk_of_news):
     response = client.get(news_home)
-    object_list = response.context['object_list']
-    all_dates = [news.date for news in object_list]
+    news_list = response.context['object_list']
+    all_dates = [news.date for news in news_list]
     sorted_dates = sorted(all_dates, reverse=True)
     assert all_dates == sorted_dates
 
 
-def test_comments_sorted(client, news_detail):
+def test_comments_sorted(client, news_detail, create_bulk_of_comments):
     response = client.get(news_detail)
     all_comments = response.context['news'].comment_set.all()
     all_timestamps = [comment.created for comment in all_comments]

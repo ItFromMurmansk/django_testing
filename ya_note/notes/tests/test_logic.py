@@ -42,12 +42,11 @@ class TestLogic(TestBasicClass):
     def test_slug_unique(self):
         note_count = Note.objects.count()
         response = self.auth_author.post(NOTES_ADD, data=FORM_DATA)
-        note_item = Note.objects.get()
         self.assertEqual(note_count, Note.objects.count())
         self.assertFormError(response,
                              form='form',
                              field='slug',
-                             errors=note_item.slug + WARNING)
+                             errors=FORM_DATA['slug'] + WARNING)
 
     def test_author_can_delete_note(self):
         self.auth_author.delete(NOTES_DELETE)
